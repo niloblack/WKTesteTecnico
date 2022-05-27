@@ -1778,32 +1778,19 @@ object FrmMain: TFrmMain
   end
   object pnlPedido: TPanel
     Left = 240
-    Top = 89
+    Top = 209
     Width = 693
-    Height = 442
+    Height = 322
     Anchors = [akLeft, akTop, akRight, akBottom]
     Color = clWindow
     ParentBackground = False
     TabOrder = 1
     DesignSize = (
       693
-      442)
-    object lblProduto: TLabel
-      Left = 20
-      Top = 18
-      Width = 45
-      Height = 13
-      Caption = 'Produto'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
+      322)
     object lblItensPedido: TLabel
-      Left = 20
-      Top = 111
+      Left = 26
+      Top = 17
       Width = 88
       Height = 13
       Caption = 'Itens do Pedido'
@@ -1814,64 +1801,9 @@ object FrmMain: TFrmMain
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object bvl03: TBevel
-      Left = 20
-      Top = 37
-      Width = 653
-      Height = 2
-      Anchors = [akLeft, akTop, akRight]
-      ExplicitWidth = 700
-    end
-    object lblCodigoProduto: TLabel
-      Left = 20
-      Top = 51
-      Width = 33
-      Height = 13
-      Caption = 'C'#243'digo'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
-    object lblQuantidadeProduto: TLabel
-      Left = 116
-      Top = 51
-      Width = 56
-      Height = 13
-      Caption = 'Quantidade'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
-    object lblValorUnitarioProduto: TLabel
-      Left = 227
-      Top = 51
-      Width = 64
-      Height = 13
-      Caption = 'Valor Unit'#225'rio'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
-    object bvl04: TBevel
-      Left = 20
-      Top = 130
-      Width = 653
-      Height = 2
-      Anchors = [akLeft, akTop, akRight]
-      ExplicitWidth = 700
-    end
     object lblTotalPedido: TLabel
       Left = 599
-      Top = 389
+      Top = 269
       Width = 74
       Height = 13
       Alignment = taRightJustify
@@ -1888,7 +1820,7 @@ object FrmMain: TFrmMain
     end
     object lblRS: TLabel
       Left = 553
-      Top = 409
+      Top = 289
       Width = 15
       Height = 16
       Alignment = taRightJustify
@@ -1904,7 +1836,7 @@ object FrmMain: TFrmMain
     end
     object lblValorTotalPedido: TLabel
       Left = 631
-      Top = 403
+      Top = 283
       Width = 42
       Height = 23
       Alignment = taRightJustify
@@ -1918,11 +1850,20 @@ object FrmMain: TFrmMain
       ParentFont = False
       ExplicitTop = 397
     end
+    object Bevel1: TBevel
+      Left = 20
+      Top = 15
+      Width = 653
+      Height = 16
+      Anchors = [akLeft, akTop, akRight]
+      Shape = bsFrame
+      Style = bsRaised
+    end
     object DBGrdItensPedido: TDBGrid
       Left = 20
-      Top = 145
+      Top = 41
       Width = 653
-      Height = 232
+      Height = 212
       Anchors = [akLeft, akTop, akRight, akBottom]
       DataSource = DS_ItensPedido
       DrawingStyle = gdsGradient
@@ -1933,7 +1874,7 @@ object FrmMain: TFrmMain
       Font.Style = []
       ParentFont = False
       ReadOnly = True
-      TabOrder = 4
+      TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -15
@@ -2005,136 +1946,56 @@ object FrmMain: TFrmMain
           Visible = True
         end>
     end
-    object edtCodigoProduto: TEdit
-      Left = 20
-      Top = 68
-      Width = 85
-      Height = 25
-      Alignment = taRightJustify
-      BevelInner = bvSpace
-      BevelKind = bkTile
-      BevelOuter = bvRaised
-      BorderStyle = bsNone
-      Color = 16382457
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      NumbersOnly = True
-      ParentFont = False
-      TabOrder = 0
-      TextHint = 'Ex: 10'
-      OnExit = edtCodigoProdutoExit
-      OnKeyDown = edtCodigoProdutoKeyDown
-    end
-    object edtQuantidade: TEdit
-      Left = 116
-      Top = 68
-      Width = 100
-      Height = 25
-      Alignment = taRightJustify
-      BevelInner = bvSpace
-      BevelKind = bkTile
-      BevelOuter = bvRaised
-      BorderStyle = bsNone
-      Color = 16382457
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 1
-      Text = '1,00'
-      TextHint = 'Ex: 1'
-      OnKeyDown = edtQuantidadeKeyDown
-    end
-    object edtValorUnitario: TEdit
-      Left = 227
-      Top = 68
-      Width = 100
-      Height = 25
-      Alignment = taRightJustify
-      BevelInner = bvSpace
-      BevelKind = bkTile
-      BevelOuter = bvRaised
-      BorderStyle = bsNone
-      Color = 16382457
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 2
-      TextHint = 'Ex: 1,50'
-      OnKeyDown = edtValorUnitarioKeyDown
-    end
-    object btnIncluirProduto: TButton
-      Left = 334
-      Top = 67
-      Width = 101
-      Height = 27
-      Cursor = crHandPoint
-      Caption = 'Incluir Produto'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 3
-      OnClick = btnIncluirProdutoClick
-    end
-    object btnGravarPedido: TButton
-      Left = 512
-      Top = 59
-      Width = 161
-      Height = 49
-      Cursor = crHandPoint
-      Anchors = [akTop, akRight]
-      Caption = 'Gravar Pedido'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 5
-      OnClick = btnGravarPedidoClick
-    end
     object btnCarregarPedido: TButton
       Left = 20
-      Top = 383
+      Top = 259
       Width = 101
       Height = 25
+      Anchors = [akLeft, akBottom]
       Caption = 'Carregar Pedido'
-      TabOrder = 6
+      TabOrder = 1
       OnClick = btnCarregarPedidoClick
+      ExplicitTop = 383
     end
     object btnCancelarPedido: TButton
       Left = 125
-      Top = 383
+      Top = 259
       Width = 101
       Height = 25
+      Anchors = [akLeft, akBottom]
       Caption = 'Cancelar Pedido'
-      TabOrder = 7
+      TabOrder = 2
       OnClick = btnCancelarPedidoClick
+      ExplicitTop = 383
+    end
+    object btnVoltar: TButton
+      Left = 20
+      Top = 281
+      Width = 101
+      Height = 25
+      Cursor = crHandPoint
+      Anchors = [akLeft, akBottom]
+      Caption = 'Novo Pedido'
+      TabOrder = 3
+      Visible = False
+      OnClick = btnVoltarClick
     end
   end
   object pnlTopo: TPanel
     Left = 240
     Top = 11
     Width = 693
-    Height = 68
+    Height = 78
     Anchors = [akLeft, akTop, akRight]
     Color = clWindow
     ParentBackground = False
     TabOrder = 2
+    DesignSize = (
+      693
+      78)
     object lblTipo: TLabel
-      Left = 20
-      Top = 11
+      Left = 26
+      Top = 16
       Width = 39
       Height = 13
       Caption = 'Cliente'
@@ -2145,9 +2006,18 @@ object FrmMain: TFrmMain
       Font.Style = [fsBold]
       ParentFont = False
     end
+    object Bevel2: TBevel
+      Left = 20
+      Top = 15
+      Width = 653
+      Height = 16
+      Anchors = [akLeft, akTop, akRight]
+      Shape = bsFrame
+      Style = bsRaised
+    end
     object edtClienteSelecionado: TEdit
       Left = 116
-      Top = 28
+      Top = 38
       Width = 319
       Height = 25
       BevelKind = bkTile
@@ -2170,7 +2040,7 @@ object FrmMain: TFrmMain
     end
     object edtCodigoCliente: TEdit
       Left = 20
-      Top = 28
+      Top = 38
       Width = 85
       Height = 25
       Alignment = taRightJustify
@@ -2195,7 +2065,7 @@ object FrmMain: TFrmMain
     end
     object edtCidadeCliente: TEdit
       Left = 447
-      Top = 28
+      Top = 38
       Width = 185
       Height = 25
       BevelKind = bkTile
@@ -2217,7 +2087,7 @@ object FrmMain: TFrmMain
     end
     object edtUFCliente: TEdit
       Left = 646
-      Top = 28
+      Top = 38
       Width = 27
       Height = 25
       BevelKind = bkTile
@@ -2237,6 +2107,182 @@ object FrmMain: TFrmMain
       Text = 'UF'
       TextHint = 'Cliente n'#227'o selecionado'
       OnKeyDown = edtUFClienteKeyDown
+    end
+  end
+  object pnlProdutos: TPanel
+    Left = 240
+    Top = 96
+    Width = 693
+    Height = 106
+    Color = clWhite
+    ParentBackground = False
+    TabOrder = 3
+    DesignSize = (
+      693
+      106)
+    object lblProduto: TLabel
+      Left = 26
+      Top = 16
+      Width = 45
+      Height = 13
+      Caption = 'Produto'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object bvl03: TBevel
+      Left = 20
+      Top = 15
+      Width = 653
+      Height = 16
+      Anchors = [akLeft, akTop, akRight]
+      Shape = bsFrame
+      Style = bsRaised
+    end
+    object lblCodigoProduto: TLabel
+      Left = 20
+      Top = 43
+      Width = 33
+      Height = 13
+      Caption = 'C'#243'digo'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object lblQuantidadeProduto: TLabel
+      Left = 116
+      Top = 43
+      Width = 56
+      Height = 13
+      Caption = 'Quantidade'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object lblValorUnitarioProduto: TLabel
+      Left = 227
+      Top = 43
+      Width = 64
+      Height = 13
+      Caption = 'Valor Unit'#225'rio'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object edtCodigoProduto: TEdit
+      Left = 20
+      Top = 60
+      Width = 85
+      Height = 25
+      Alignment = taRightJustify
+      BevelInner = bvSpace
+      BevelKind = bkTile
+      BevelOuter = bvRaised
+      BorderStyle = bsNone
+      Color = 16382457
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      NumbersOnly = True
+      ParentFont = False
+      TabOrder = 0
+      TextHint = 'Ex: 10'
+      OnExit = edtCodigoProdutoExit
+      OnKeyDown = edtCodigoProdutoKeyDown
+    end
+    object edtQuantidade: TEdit
+      Left = 116
+      Top = 60
+      Width = 100
+      Height = 25
+      Alignment = taRightJustify
+      BevelInner = bvSpace
+      BevelKind = bkTile
+      BevelOuter = bvRaised
+      BorderStyle = bsNone
+      Color = 16382457
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
+      Text = '1,00'
+      TextHint = 'Ex: 1'
+      OnContextPopup = edtQuantidadeContextPopup
+      OnKeyDown = edtQuantidadeKeyDown
+      OnKeyPress = edtQuantidadeKeyPress
+    end
+    object edtValorUnitario: TEdit
+      Left = 227
+      Top = 60
+      Width = 100
+      Height = 25
+      Alignment = taRightJustify
+      BevelInner = bvSpace
+      BevelKind = bkTile
+      BevelOuter = bvRaised
+      BorderStyle = bsNone
+      Color = 16382457
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 2
+      TextHint = 'Ex: 1,50'
+      OnContextPopup = edtQuantidadeContextPopup
+      OnKeyDown = edtValorUnitarioKeyDown
+      OnKeyPress = edtValorUnitarioKeyPress
+    end
+    object btnIncluirProduto: TButton
+      Left = 334
+      Top = 59
+      Width = 101
+      Height = 27
+      Cursor = crHandPoint
+      Caption = 'Incluir Produto'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 3
+      OnClick = btnIncluirProdutoClick
+    end
+    object btnGravarPedido: TButton
+      Left = 512
+      Top = 38
+      Width = 162
+      Height = 49
+      Cursor = crHandPoint
+      Anchors = [akTop, akRight]
+      Caption = 'Gravar Pedido'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 4
+      OnClick = btnGravarPedidoClick
     end
   end
   object FDMT_ItensPedido: TFDMemTable

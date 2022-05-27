@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
-  dxGDIPlusClasses, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons,
+  dxGDIPlusClasses, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, ClipBrd,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, System.UITypes,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, StrUtils, Model.Pedidos;
@@ -27,21 +27,10 @@ type
     lblTipo: TLabel;
     DBGrdItensPedido: TDBGrid;
     edtClienteSelecionado: TEdit;
-    edtCodigoProduto: TEdit;
-    edtQuantidade: TEdit;
-    edtValorUnitario: TEdit;
-    btnIncluirProduto: TButton;
-    lblProduto: TLabel;
     lblItensPedido: TLabel;
-    bvl03: TBevel;
-    lblCodigoProduto: TLabel;
-    lblQuantidadeProduto: TLabel;
-    lblValorUnitarioProduto: TLabel;
-    bvl04: TBevel;
     lblTotalPedido: TLabel;
     lblRS: TLabel;
     lblValorTotalPedido: TLabel;
-    btnGravarPedido: TButton;
     FDMT_ItensPedido: TFDMemTable;
     DS_ItensPedido: TDataSource;
     FDMT_ItensPedidodescricao_produto: TStringField;
@@ -55,6 +44,20 @@ type
     edtUFCliente: TEdit;
     btnCarregarPedido: TButton;
     btnCancelarPedido: TButton;
+    pnlProdutos: TPanel;
+    lblProduto: TLabel;
+    bvl03: TBevel;
+    lblCodigoProduto: TLabel;
+    lblQuantidadeProduto: TLabel;
+    lblValorUnitarioProduto: TLabel;
+    edtCodigoProduto: TEdit;
+    edtQuantidade: TEdit;
+    edtValorUnitario: TEdit;
+    btnIncluirProduto: TButton;
+    btnGravarPedido: TButton;
+    Bevel1: TBevel;
+    Bevel2: TBevel;
+    btnVoltar: TButton;
     procedure FormActivate(Sender: TObject);
     procedure btnIncluirProdutoClick(Sender: TObject);
     procedure edtCodigoProdutoKeyDown(Sender: TObject; var Key: Word;
@@ -80,9 +83,16 @@ type
     procedure edtCodigoClienteChange(Sender: TObject);
     procedure btnCarregarPedidoClick(Sender: TObject);
     procedure btnCancelarPedidoClick(Sender: TObject);
+    procedure edtQuantidadeKeyPress(Sender: TObject; var Key: Char);
+    procedure edtValorUnitarioKeyPress(Sender: TObject; var Key: Char);
+    procedure edtQuantidadeContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: Boolean);
+    procedure btnVoltarClick(Sender: TObject);
   private
     { Private declarations }
     FCodigoClienteSelecionado: string;
+    FPedidoCarregado: string;
+
     procedure PesquisarProduto(Codigo: Integer);
     procedure PrepararCampos(Tipo: TTipoOperacao = toInsercao);
     procedure InserirProduto();
@@ -266,12 +276,31 @@ begin
   end;
 end;
 
+procedure TFrmMain.edtQuantidadeContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: Boolean);
+begin
+  Handled := True;
+end;
+
 procedure TFrmMain.edtQuantidadeKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_RETURN then
   begin
     edtValorUnitario.SetFocus();
+  end;
+
+  if (Key in [86]) and (ssCtrl in Shift)  then //Ctrl+V
+  begin
+    Clipboard.AsText := IfThen(StrToFloatDef(Clipboard.AsText, 0) = 0, '', Clipboard.AsText);
+  end;
+end;
+
+procedure TFrmMain.edtQuantidadeKeyPress(Sender: TObject; var Key: Char);
+begin
+  if not CharInSet(Key, ['0'..'9', ',', #8, #22, #3]) then
+  begin
+    Key := #0;
   end;
 end;
 
@@ -288,6 +317,19 @@ begin
   if Key = VK_RETURN then
   begin
     btnIncluirProduto.Click();
+  end;
+
+  if (Key = 86) and (ssCtrl in Shift)  then //Ctrl+V
+  begin
+    Clipboard.AsText := IfThen(StrToFloatDef(Clipboard.AsText, 0) = 0, '', Clipboard.AsText);
+  end;
+end;
+
+procedure TFrmMain.edtValorUnitarioKeyPress(Sender: TObject; var Key: Char);
+begin
+  if not CharInSet(Key, ['0'..'9', ',', #8, #22, #3]) then
+  begin
+    Key := #0;
   end;
 end;
 
@@ -352,6 +394,10 @@ begin
       if ControllerPedido.Model.Numero > 0 then
       begin
         CarregarPedido(ControllerPedido.Model);
+        pnlProdutos.Visible := False;
+        pnlPedido.Top := pnlProdutos.Top;
+        pnlPedido.Height := pnlPedido.Height + pnlProdutos.Height + 7;
+        btnVoltar.Visible := True;
       end
         else
         begin
@@ -453,6 +499,11 @@ begin
   edtCidadeCliente.Text := 'Cidade';
   edtUFCliente.Text := 'UF';
 
+  pnlProdutos.Visible := True;
+  pnlPedido.Height := pnlPedido.Height - (pnlProdutos.Height + 7);
+  pnlPedido.Top := pnlProdutos.Top + pnlProdutos.Height + 7;
+  btnVoltar.Visible := False;
+
   FDMT_ItensPedido.EmptyDataSet;
   lblValorTotalPedido.Caption := '0,00';
   PrepararCampos(toInsercao);
@@ -490,6 +541,11 @@ begin
     begin
       InserirProduto();
     end;
+end;
+
+procedure TFrmMain.btnVoltarClick(Sender: TObject);
+begin
+  PrepararNovoPedido();
 end;
 
 procedure TFrmMain.InserirProduto();
@@ -547,6 +603,7 @@ procedure TFrmMain.FormCreate(Sender: TObject);
 begin
   FDMT_ItensPedido.Open;
   FDMT_ItensPedido.EmptyDataSet;
+  Self.CodigoClienteSelecionado := '';
 end;
 
 procedure TFrmMain.FormActivate(Sender: TObject);
