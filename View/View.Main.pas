@@ -478,6 +478,7 @@ begin
     try
       ControllerPedido.Inserir();
       PrepararNovoPedido();
+      MessageDlg('Pedido inserido com sucesso!', mtInformation, [mbOk], 0);
     except
       on E:Exception do
       begin
@@ -499,10 +500,13 @@ begin
   edtCidadeCliente.Text := 'Cidade';
   edtUFCliente.Text := 'UF';
 
-  pnlProdutos.Visible := True;
-  pnlPedido.Height := pnlPedido.Height - (pnlProdutos.Height + 7);
-  pnlPedido.Top := pnlProdutos.Top + pnlProdutos.Height + 7;
-  btnVoltar.Visible := False;
+  if (pnlProdutos.Visible = False) then
+  begin
+    pnlProdutos.Visible := True;
+    pnlPedido.Height := pnlPedido.Height - (pnlProdutos.Height + 7);
+    pnlPedido.Top := pnlProdutos.Top + pnlProdutos.Height + 7;
+    btnVoltar.Visible := False;
+  end;
 
   FDMT_ItensPedido.EmptyDataSet;
   lblValorTotalPedido.Caption := '0,00';

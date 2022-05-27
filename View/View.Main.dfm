@@ -1955,7 +1955,6 @@ object FrmMain: TFrmMain
       Caption = 'Carregar Pedido'
       TabOrder = 1
       OnClick = btnCarregarPedidoClick
-      ExplicitTop = 383
     end
     object btnCancelarPedido: TButton
       Left = 125
@@ -1966,7 +1965,6 @@ object FrmMain: TFrmMain
       Caption = 'Cancelar Pedido'
       TabOrder = 2
       OnClick = btnCancelarPedidoClick
-      ExplicitTop = 383
     end
     object btnVoltar: TButton
       Left = 20
