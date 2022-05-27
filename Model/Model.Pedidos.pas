@@ -16,11 +16,17 @@ type
     FCodigoCliente: Integer;
     FValorTotal: Double;
     FItens: TItensPedidosCollection;
+    FNomeCliente: string;
+    FCidadeCliente: string;
+    FUFCliente: string;
 
   published
     property Numero: Integer read FNumero write FNumero;
     property DataEmissao: TDate read FDataEmissao write FDataEmissao;
     property CodigoCliente: Integer read FCodigoCliente write FCodigoCliente;
+    property NomeCliente: string read FNomeCliente write FNomeCliente;
+    property CidadeCliente: string read FCidadeCliente write FCidadeCliente;
+    property UFCliente: string read FUFCliente write FUFCliente;
     property ValorTotal: Double read FValorTotal write FValorTotal;
     property Itens: TItensPedidosCollection read FItens write FItens;
 

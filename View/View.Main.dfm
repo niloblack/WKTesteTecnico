@@ -1437,7 +1437,7 @@ object FrmMain: TFrmMain
       Anchors = [akLeft, akTop, akRight]
       ExplicitWidth = 180
     end
-    object lblQuestoes: TLabel
+    object lblMiniCurriculo: TLabel
       Left = 9
       Top = 208
       Width = 75
@@ -1822,7 +1822,7 @@ object FrmMain: TFrmMain
       Anchors = [akLeft, akTop, akRight]
       ExplicitWidth = 700
     end
-    object Label3: TLabel
+    object lblCodigoProduto: TLabel
       Left = 20
       Top = 51
       Width = 33
@@ -1835,7 +1835,7 @@ object FrmMain: TFrmMain
       Font.Style = []
       ParentFont = False
     end
-    object Label4: TLabel
+    object lblQuantidadeProduto: TLabel
       Left = 116
       Top = 51
       Width = 56
@@ -1848,7 +1848,7 @@ object FrmMain: TFrmMain
       Font.Style = []
       ParentFont = False
     end
-    object Label5: TLabel
+    object lblValorUnitarioProduto: TLabel
       Left = 227
       Top = 51
       Width = 64
@@ -2104,6 +2104,24 @@ object FrmMain: TFrmMain
       TabOrder = 5
       OnClick = btnGravarPedidoClick
     end
+    object btnCarregarPedido: TButton
+      Left = 20
+      Top = 383
+      Width = 101
+      Height = 25
+      Caption = 'Carregar Pedido'
+      TabOrder = 6
+      OnClick = btnCarregarPedidoClick
+    end
+    object btnCancelarPedido: TButton
+      Left = 125
+      Top = 383
+      Width = 101
+      Height = 25
+      Caption = 'Cancelar Pedido'
+      TabOrder = 7
+      OnClick = btnCancelarPedidoClick
+    end
   end
   object pnlTopo: TPanel
     Left = 240
@@ -2148,12 +2166,14 @@ object FrmMain: TFrmMain
       TabOrder = 0
       Text = 'Cliente n'#227'o selecionado'
       TextHint = 'Cliente n'#227'o selecionado'
+      OnKeyDown = edtClienteSelecionadoKeyDown
     end
     object edtCodigoCliente: TEdit
       Left = 20
       Top = 28
       Width = 85
       Height = 25
+      Alignment = taRightJustify
       BevelKind = bkTile
       BevelOuter = bvSpace
       BorderStyle = bsNone
@@ -2163,11 +2183,13 @@ object FrmMain: TFrmMain
       Font.Height = -15
       Font.Name = 'Tahoma'
       Font.Style = []
+      NumbersOnly = True
       ParentFont = False
       ParentShowHint = False
       ShowHint = False
       TabOrder = 1
       TextHint = 'C'#243'digo'
+      OnChange = edtCodigoClienteChange
       OnExit = edtCodigoClienteExit
       OnKeyDown = edtCodigoClienteKeyDown
     end
@@ -2191,6 +2213,7 @@ object FrmMain: TFrmMain
       ShowHint = False
       TabOrder = 2
       Text = 'Cidade'
+      OnKeyDown = edtCidadeClienteKeyDown
     end
     object edtUFCliente: TEdit
       Left = 646
@@ -2213,6 +2236,7 @@ object FrmMain: TFrmMain
       TabOrder = 3
       Text = 'UF'
       TextHint = 'Cliente n'#227'o selecionado'
+      OnKeyDown = edtUFClienteKeyDown
     end
   end
   object FDMT_ItensPedido: TFDMemTable

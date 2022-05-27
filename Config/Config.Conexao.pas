@@ -142,7 +142,6 @@ begin
     begin
       FDConnection1.Connected := False;
       raise Exception.Create('Ocorreu um erro ao carregar parâmetros de conexão com o banco de dados!');
-      //MessageDlg('Ocorreu um erro ao carregar parâmetros de conexão com o banco de dados!', mtError, [mbOk], 0);
     end;
   end;
 end;

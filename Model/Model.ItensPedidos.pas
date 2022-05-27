@@ -11,6 +11,7 @@ type
     FId: Integer;
     FNumeroPedido: Integer;
     FCodigoProduto: Integer;
+    FDescricaoProduto: string;
     FQuantidade: Double;
     FValorUnitario: Double;
     FValorTotal: Double;
@@ -19,6 +20,7 @@ type
     property Id: Integer read FId write FId;
     property NumeroPedido: Integer read FNumeroPedido write FNumeroPedido;
     property CodigoProduto: Integer read FCodigoProduto write FCodigoProduto;
+    property DescricaoProduto: string read FDescricaoProduto write FDescricaoProduto;
     property Quantidade: Double read FQuantidade write FQuantidade;
     property ValorUnitario: Double read FValorUnitario write FValorUnitario;
     property ValorTotal: Double read FValorTotal write FValorTotal;

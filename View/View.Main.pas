@@ -6,9 +6,9 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
   dxGDIPlusClasses, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons,
-  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, System.UITypes,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client, StrUtils;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, StrUtils, Model.Pedidos;
 
 type
   TTipoOperacao = (toInsercao, toEdicao);
@@ -18,7 +18,7 @@ type
     lblNome: TLabel;
     lblDescricaoCandidato: TLabel;
     bvl01: TBevel;
-    lblQuestoes: TLabel;
+    lblMiniCurriculo: TLabel;
     bvl02: TBevel;
     mmMiniCurriculo: TMemo;
     imgWK: TImage;
@@ -34,9 +34,9 @@ type
     lblProduto: TLabel;
     lblItensPedido: TLabel;
     bvl03: TBevel;
-    Label3: TLabel;
-    Label4: TLabel;
-    Label5: TLabel;
+    lblCodigoProduto: TLabel;
+    lblQuantidadeProduto: TLabel;
+    lblValorUnitarioProduto: TLabel;
     bvl04: TBevel;
     lblTotalPedido: TLabel;
     lblRS: TLabel;
@@ -53,6 +53,8 @@ type
     edtCodigoCliente: TEdit;
     edtCidadeCliente: TEdit;
     edtUFCliente: TEdit;
+    btnCarregarPedido: TButton;
+    btnCancelarPedido: TButton;
     procedure FormActivate(Sender: TObject);
     procedure btnIncluirProdutoClick(Sender: TObject);
     procedure edtCodigoProdutoKeyDown(Sender: TObject; var Key: Word;
@@ -69,6 +71,15 @@ type
     procedure edtCodigoClienteExit(Sender: TObject);
     procedure edtCodigoClienteKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure edtClienteSelecionadoKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edtCidadeClienteKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edtUFClienteKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edtCodigoClienteChange(Sender: TObject);
+    procedure btnCarregarPedidoClick(Sender: TObject);
+    procedure btnCancelarPedidoClick(Sender: TObject);
   private
     { Private declarations }
     FCodigoClienteSelecionado: string;
@@ -77,6 +88,8 @@ type
     procedure InserirProduto();
     procedure AlterarProduto();
     procedure PesquisarCliente(Codigo: Integer);
+    procedure PrepararNovoPedido();
+    procedure CarregarPedido(Pedido: TModelPedidos);
   public
     { Public declarations }
     property CodigoClienteSelecionado: string read FCodigoClienteSelecionado write FCodigoClienteSelecionado;
@@ -130,9 +143,29 @@ begin
         edtQuantidade.SetFocus;
 end;
 
+procedure TFrmMain.edtCidadeClienteKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_RETURN then
+    edtUFCliente.SetFocus;
+end;
+
+procedure TFrmMain.edtClienteSelecionadoKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_RETURN then
+    edtCidadeCliente.SetFocus;
+end;
+
+procedure TFrmMain.edtCodigoClienteChange(Sender: TObject);
+begin
+  btnCarregarPedido.Visible := edtCodigoCliente.Text = '';
+  btnCancelarPedido.Visible := edtCodigoCliente.Text = '';
+end;
+
 procedure TFrmMain.edtCodigoClienteExit(Sender: TObject);
 begin
-  if (StrToIntDef(edtCodigoProduto.Text, 0)) > 0 then
+  if (StrToIntDef(edtCodigoCliente.Text, 0)) > 0 then
   begin
     PesquisarCliente(StrToIntDef(edtCodigoCliente.Text, 0));
     edtClienteSelecionado.SetFocus();
@@ -172,10 +205,12 @@ begin
     end
       else
       begin
+        MessageDlg('Nenhum cliente encontrado com esse código!', mtWarning, [mbOk], 0);
         FCodigoClienteSelecionado := '';
+        edtCodigoCliente.Text := '';
         edtClienteSelecionado.Text := 'Cliente não selecionado';
-        edtCidadeCliente.Text := '';
-        edtUFCliente.Text := '';
+        edtCidadeCliente.Text := 'Cidade';
+        edtUFCliente.Text := 'UF';
       end;
   finally
     ControllerCliente.Free;
@@ -240,12 +275,120 @@ begin
   end;
 end;
 
+procedure TFrmMain.edtUFClienteKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_RETURN then
+    edtCodigoProduto.SetFocus;
+end;
+
 procedure TFrmMain.edtValorUnitarioKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_RETURN then
   begin
     btnIncluirProduto.Click();
+  end;
+end;
+
+procedure TFrmMain.btnCancelarPedidoClick(Sender: TObject);
+var
+  NumeroPedido: string;
+  ControllerPedido: TControllerPedidos;
+begin
+  if (InputQuery('Informe o número do pedido', 'Número:', NumeroPedido)) then
+  begin
+    if StrToIntDef(NumeroPedido, 0) = 0 then
+    begin
+      MessageDlg('Por favor, informe um número válido!', mtWarning, [mbOk], 0);
+      btnCarregarPedido.SetFocus;
+      Abort;
+    end;
+
+    ControllerPedido := TControllerPedidos.Create();
+    try
+      try
+        if ControllerPedido.Deletar(StrToIntDef(NumeroPedido, 0)) then
+          MessageDlg('Pedido "'+NumeroPedido+'" cancelado com sucesso!', mtInformation, [mbOk], 0)
+            else
+              MessageDlg('Pedido "'+NumeroPedido+'" não encontrado para cancelado!', mtWarning, [mbOk], 0)
+      except
+        on E:Exception do
+        begin
+          MessageDlg(E.Message, mtError, [mbOk], 0);
+        end;
+      end;
+    finally
+      ControllerPedido.Free;
+    end;
+  end;
+end;
+
+procedure TFrmMain.btnCarregarPedidoClick(Sender: TObject);
+var
+  NumeroPedido: string;
+  ControllerPedido: TControllerPedidos;
+begin
+  if (InputQuery('Informe o número do pedido', 'Número:', NumeroPedido)) then
+  begin
+    if StrToIntDef(NumeroPedido, 0) = 0 then
+    begin
+      MessageDlg('Por favor, informe um número válido!', mtWarning, [mbOk], 0);
+      btnCarregarPedido.SetFocus;
+      Abort;
+    end;
+
+    ControllerPedido := TControllerPedidos.Create();
+    try
+      try
+        ControllerPedido.PesquisarPorNumero(StrToIntDef(NumeroPedido, 0));
+      except
+        on E:Exception do
+        begin
+          MessageDlg(E.Message, mtError, [mbOk], 0);
+        end;
+      end;
+
+      if ControllerPedido.Model.Numero > 0 then
+      begin
+        CarregarPedido(ControllerPedido.Model);
+      end
+        else
+        begin
+          MessageDlg('Não encontramos nenhum pedido com esse número!', mtWarning, [mbOk], 0);
+          btnCarregarPedido.SetFocus();
+          Abort;
+        end;
+    finally
+      ControllerPedido.Free;
+    end;
+  end;
+end;
+
+procedure TFrmMain.CarregarPedido(Pedido: TModelPedidos);
+var
+  I: Integer;
+begin
+  with Pedido do
+  begin
+    Self.CodigoClienteSelecionado := IntToStr(CodigoCliente);
+    edtCodigoCliente.Text         := IntToStr(CodigoCliente);
+    edtClienteSelecionado.Text    := NomeCliente;
+    edtCidadeCliente.Text         := CidadeCliente;
+    edtUFCliente.Text             := UFCliente;
+    lblValorTotalPedido.Caption   := FormatFloat(',0.00', ValorTotal);
+
+    FDMT_ItensPedido.EmptyDataSet;
+    for I := 0 to Pred(Itens.Count) do
+    begin
+      FDMT_ItensPedido.Append;
+      FDMT_ItensPedidocodigo_produto.AsInteger   := Itens[I].CodigoProduto;
+      FDMT_ItensPedidodescricao_produto.AsString := Itens[I].DescricaoProduto;
+      FDMT_ItensPedidoquantidade.AsFloat         := Itens[I].Quantidade;
+      FDMT_ItensPedidovalor_unitario.AsFloat     := Itens[I].ValorUnitario;
+      FDMT_ItensPedidovalor_total.AsFloat        := Itens[I].ValorTotal;
+      FDMT_ItensPedido.Post;
+    end;
   end;
 end;
 
@@ -256,7 +399,7 @@ begin
   if Trim(Self.CodigoClienteSelecionado) = EmptyStr then
   begin
     MessageDlg('Selecione o cliente antes de gravar o pedido!', mtWarning, [mbOk], 0);
-    edtCodigoProduto.SetFocus;
+    edtCodigoCliente.SetFocus;
     Abort;
   end;
 
@@ -270,7 +413,7 @@ begin
   ControllerPedido := TControllerPedidos.Create();
   try
     ControllerPedido.Model.CodigoCliente := StrToInt(Self.CodigoClienteSelecionado);
-    ControllerPedido.Model.ValorTotal    := FDMT_ItensPedidovalor_total_pedido.AsFloat;
+    ControllerPedido.Model.ValorTotal    := StrToFloatDef(FDMT_ItensPedidovalor_total_pedido.AsString, 0);
 
     FDMT_ItensPedido.First;
     while FDMT_ItensPedido.Eof = False do
@@ -280,16 +423,39 @@ begin
         CodigoProduto := FDMT_ItensPedidocodigo_produto.AsInteger;
         Quantidade    := FDMT_ItensPedidoquantidade.AsFloat;
         ValorUnitario := FDMT_ItensPedidovalor_unitario.AsFloat;
-        ValorTotal    := FDMT_ItensPedidovalor_total_pedido.AsFloat;
+        ValorTotal    := FDMT_ItensPedidovalor_total.AsFloat;
       end;
 
       FDMT_ItensPedido.Next;
     end;
 
-    ControllerPedido.Inserir();
+    try
+      ControllerPedido.Inserir();
+      PrepararNovoPedido();
+    except
+      on E:Exception do
+      begin
+        MessageDlg(E.Message, mtError, [mbOk], 0);
+      end;
+    end;
   finally
     ControllerPedido.Free;
   end;
+end;
+
+procedure TFrmMain.PrepararNovoPedido();
+begin
+  Self.CodigoClienteSelecionado := '';
+
+  edtCodigoCliente.Text := '';
+  edtClienteSelecionado.Text := 'Cliente não selecionado';
+  edtClienteSelecionado.SetFocus;
+  edtCidadeCliente.Text := 'Cidade';
+  edtUFCliente.Text := 'UF';
+
+  FDMT_ItensPedido.EmptyDataSet;
+  lblValorTotalPedido.Caption := '0,00';
+  PrepararCampos(toInsercao);
 end;
 
 procedure TFrmMain.btnIncluirProdutoClick(Sender: TObject);
@@ -366,8 +532,6 @@ begin
 end;
 
 procedure TFrmMain.AlterarProduto();
-var
-  ControllerProduto: TControllerProdutos;
 begin
   FDMT_ItensPedidoquantidade.AsFloat         := StrToFloatDef(edtQuantidade.Text, 0);
   FDMT_ItensPedidovalor_unitario.AsFloat     := StrToFloatDef(edtValorUnitario.Text, 0);
@@ -387,8 +551,8 @@ end;
 
 procedure TFrmMain.FormActivate(Sender: TObject);
 begin
-  if edtCodigoProduto.Enabled then
-    edtCodigoProduto.SetFocus;
+  if edtCodigoCliente.Enabled then
+    edtCodigoCliente.SetFocus;
 end;
 
 end.
